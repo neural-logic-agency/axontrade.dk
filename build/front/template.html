@@ -12,21 +12,25 @@
 <meta property="og:image" content="https://axontrade.dk/og.png">
 <meta property="og:url" content="{{ogurl}}">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Axon Trade ApS">
+{{locale_meta}}
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 {{canonical}}
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230B1F35'/><circle cx='10' cy='16' r='5.5' fill='%239FD1E8'/><path d='M15.5 16h9' stroke='%239FD1E8' stroke-width='2' stroke-linecap='round'/><circle cx='25.5' cy='16' r='2.2' fill='%239FD1E8'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Organization","@id":"https://axontrade.dk/#org","name":"Axon Trade ApS","legalName":"Axon Trade ApS","url":"https://axontrade.dk/","logo":"https://axontrade.dk/og.png","description":"Axon Trade ApS is a Danish private limited company in Copenhagen. It operates Neural Logic, which builds AI colleagues for companies with large archives, and Hockey24, an online shop for hockey equipment.","foundingDate":"2025-09-18","founder":{"@type":"Person","name":"Thomas Möller"},"address":{"@type":"PostalAddress","streetAddress":"Njalsgade 21F, 2.","postalCode":"2300","addressLocality":"København S","addressCountry":"DK"},"identifier":{"@type":"PropertyValue","propertyID":"CVR","value":"45920763"},"vatID":"DK45920763","email":"info@axontrade.dk","areaServed":["DK","DE","EU"],"knowsLanguage":["da","de","en"],"brand":[{"@type":"Brand","name":"Neural Logic","url":"https://neurallogic.dk/"},{"@type":"Brand","name":"Hockey24","url":"https://hockey24.dk/"}]}
-</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"></noscript>
+{{jsonld}}
 <style>
 :root{
   --canvas:#0B1F35; --surface:#10294A; --ink:#EEEAE0; --soft:#AEB8C4; --faint:#9AA6B6;
   --accent:#9FD1E8; --accent-ink:#0B1F35; --acc-dim:rgba(159,209,232,.14);
   --brass:#CDAE72; --brass-dim:rgba(205,174,114,.16); --brass-line:rgba(205,174,114,.42);
   --line:rgba(238,234,224,.11); --line2:rgba(238,234,224,.2);
+  --field-edge:rgba(238,234,224,.40);
   --ui:"Instrument Sans",system-ui,sans-serif; --serif:"Source Serif 4",Georgia,serif;
   --ease:cubic-bezier(.23,1,.32,1);
   --gutter:clamp(20px,4vw,48px);
@@ -130,20 +134,21 @@ a.node:hover .u::after{transform:translateX(3px) rotate(45deg)}
 .gets span{font:400 16px/1.6 var(--serif);color:var(--soft)}
 
 /* the register: set out as an extract, the register number as its one large figure */
+.extract dl{display:contents}
 .extract{border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line2),0 30px 80px -50px rgba(0,0,0,.8);
   display:grid;grid-template-columns:1fr 1fr;padding:8px 0}
-.extract > div{padding:18px 28px;min-width:0;border-top:1px solid var(--line)}
-.extract > div:nth-child(-n+2){border-top:0}
-.extract > div:nth-child(2){grid-column:1/-1;order:-1;padding:26px 28px 24px;border-bottom:1px solid var(--line2)}
-.extract > div:nth-child(2) dd{font:600 clamp(40px,5vw,64px)/1 var(--serif);font-variation-settings:"opsz" 60;letter-spacing:-.01em;color:var(--brass);font-variant-numeric:tabular-nums lining-nums}
-.extract > div:nth-child(1){border-top:0}
+.extract dl > div{padding:18px 28px;min-width:0;border-top:1px solid var(--line)}
+.extract dl > div:nth-child(-n+2){border-top:0}
+.extract dl > div:nth-child(2){grid-column:1/-1;order:-1;padding:26px 28px 24px;border-bottom:1px solid var(--line2)}
+.extract dl > div:nth-child(2) dd{font:600 clamp(40px,5vw,64px)/1 var(--serif);font-variation-settings:"opsz" 60;letter-spacing:-.01em;color:var(--brass);font-variant-numeric:tabular-nums lining-nums}
+.extract dl > div:nth-child(1){border-top:0}
 .extract dt{font:500 12px/1.3 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
 .extract dd{font:400 15.5px/1.55 var(--ui);color:var(--ink);font-variant-numeric:tabular-nums}
-.extract .src{grid-column:1/-1;font:400 13px/1.5 var(--ui);color:var(--faint);border-top:1px solid var(--line2);padding-top:16px}
+.extract .src{grid-column:1/-1;min-width:0;font:400 13px/1.5 var(--ui);color:var(--faint);border-top:1px solid var(--line2);padding:16px 28px 18px}
 
 .write{margin-top:36px}
 .write label{display:block;font:500 12px/1.3 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-bottom:10px}
-.write .field{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;background:rgba(0,0,0,.22);border-radius:10px;padding:6px 6px 6px 16px;box-shadow:inset 0 0 0 1px var(--line2)}
+.write .field{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;background:rgba(0,0,0,.22);border-radius:10px;padding:6px 6px 6px 16px;box-shadow:inset 0 0 0 1px var(--field-edge)}
 .write .field:focus-within{box-shadow:inset 0 0 0 1px var(--brass),0 0 0 3px var(--brass-dim)}
 .write input{flex:1;min-width:180px;background:none;border:0;color:var(--ink);font:400 16px/1.4 var(--ui);padding:10px 0;outline:none;text-overflow:ellipsis}
 .write input::placeholder{color:var(--faint)}
@@ -190,20 +195,22 @@ footer.foot .wrap{display:flex;justify-content:space-between;gap:8px 28px;flex-w
   .venture .go{margin-top:6px}
   .gets{grid-template-columns:1fr;gap:32px}
   .extract{grid-template-columns:1fr}
-  .extract > div{padding:16px 20px}
-  .extract > div:nth-child(2){padding:22px 20px 20px}
+  .extract dl > div{padding:16px 20px}
+  .extract dl > div:nth-child(2){padding:22px 20px 20px}
+  .extract .src{padding:16px 20px}
   footer.foot .wrap{flex-direction:column;gap:4px}
 }
 </style>
 </head>
-<body>
-<main id="top">
+<body id="top">
 
 <header class="top"><div class="wrap">{{t.t002_div}}{{langswitch}}</div></header>
 
-<section class="hero"><div class="wrap">
+<main id="main">
+
+<section class="hero" aria-labelledby="h-top"><div class="wrap">
   <div class="thesis">
-    <h1>{{t.t004_h1}}</h1>
+    <h1 id="h-top">{{t.t004_h1}}</h1>
     <p class="lede">{{t.t005_p}}</p>
   </div>
   <figure class="exhibit">
@@ -221,8 +228,8 @@ footer.foot .wrap{display:flex;justify-content:space-between;gap:8px 28px;flex-w
   </figure>
 </div></section>
 
-<section class="pg" id="ventures"><div class="wrap">
-  <div class="rail"><h2>{{t.t009_h2}}</h2></div>
+<section class="pg" id="ventures" aria-labelledby="h-ventures"><div class="wrap">
+  <div class="rail"><h2 id="h-ventures">{{t.t009_h2}}</h2></div>
   <div class="ventures">
     <article class="venture">
       <span class="k">{{t.t010_span}}</span>
@@ -241,9 +248,9 @@ footer.foot .wrap{display:flex;justify-content:space-between;gap:8px 28px;flex-w
   </div>
 </div></section>
 
-<section class="pg" id="counterparty"><div class="wrap">
+<section class="pg" id="counterparty" aria-labelledby="h-counterparty"><div class="wrap">
   <div class="rail">
-    <h2>{{t.t021_h2}}</h2>
+    <h2 id="h-counterparty">{{t.t021_h2}}</h2>
     <p class="lede">{{t.t022_p}}</p>
   </div>
   <ul class="gets">
@@ -254,17 +261,18 @@ footer.foot .wrap{display:flex;justify-content:space-between;gap:8px 28px;flex-w
   </ul>
 </div></section>
 
-<section class="pg" id="register"><div class="wrap">
+<section class="pg" id="register" aria-labelledby="h-register"><div class="wrap">
   <div class="rail">
-    <h2>{{t.t028_h2}}</h2>
+    <h2 id="h-register">{{t.t028_h2}}</h2>
     <p class="lede">{{t.t029_p}}</p>
     <form class="write" action="mailto:info@axontrade.dk" method="get" enctype="text/plain">
       <label for="msg">{{t.t030_label}}</label>
       <div class="field">{{t.t031_div}}</div>
-      <small>{{t.t032_small}}</small>
+      <small id="msg-hint">{{t.t032_small}}</small>
     </form>
   </div>
-  <dl class="extract">
+  <div class="extract">
+  <dl>
     <div>{{t.t033_div}}</div>
     <div>{{t.t034_div}}</div>
     <div>{{t.t035_div}}</div>
@@ -275,8 +283,9 @@ footer.foot .wrap{display:flex;justify-content:space-between;gap:8px 28px;flex-w
     <div>{{t.t040_div}}</div>
     <div>{{t.t041_div}}</div>
     <div>{{t.t042_div}}</div>
-    <div class="src">{{t.t043_div}}</div>
   </dl>
+  <p class="src">{{t.t043_div}}</p>
+  </div>
 </div></section>
 
 </main>

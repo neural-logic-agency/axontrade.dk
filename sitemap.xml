@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://axontrade.dk/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://axontrade.dk/de/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://axontrade.dk/da/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://axontrade.dk/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://axontrade.dk/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://axontrade.dk/de/"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://axontrade.dk/da/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://axontrade.dk/"/>
+  </url>
+  <url>
+    <loc>https://axontrade.dk/de/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://axontrade.dk/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://axontrade.dk/de/"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://axontrade.dk/da/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://axontrade.dk/"/>
+  </url>
+  <url>
+    <loc>https://axontrade.dk/da/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://axontrade.dk/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://axontrade.dk/de/"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://axontrade.dk/da/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://axontrade.dk/"/>
+  </url>
 </urlset>
