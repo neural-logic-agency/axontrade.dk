@@ -24,6 +24,13 @@ LANGS = ["en", "de", "da"]
 # Where each language's front page lives, and what the chooser calls it.
 HOME = {"en": "https://axontrade.dk/", "de": "https://axontrade.dk/de/", "da": "https://axontrade.dk/da/"}
 LABEL = {"en": "EN", "de": "DE", "da": "DA"}
+# The chooser's own name, and each language's name for itself (read out by screen readers; the
+# link's lang attribute makes the reader pronounce it in that language).
+NAV_NAME = {"en": "Language", "de": "Sprache", "da": "Sprog"}
+SELF_NAME = {"en": "English", "de": "Deutsch", "da": "Dansk"}
+OG_LOCALE = {"en": "en_GB", "de": "de_DE", "da": "da_DK"}
+SITE = "https://axontrade.dk"
+ORG_ID = SITE + "/#org"
 # The sister site, per language; check_links falls back to the English root while a version is not live.
 NL_HOME = {"en": "https://neurallogic.dk/", "de": "https://neurallogic.dk/de/", "da": "https://neurallogic.dk/da/"}
 OUTPUT = {"en": ROOT / "index.html", "de": ROOT / "de" / "index.html", "da": ROOT / "da" / "index.html"}
@@ -50,10 +57,10 @@ def langswitch(lang: str) -> str:
     if len(codes) < 2:
         return ""
     links = "".join(
-        '<a href="{}" hreflang="{}" lang="{}"{}>{}</a>'.format(
-            HOME[code], code, code, ' aria-current="page"' if code == lang else "", LABEL[code])
+        '<a href="{}" hreflang="{}" lang="{}" aria-label="{}"{}>{}</a>'.format(
+            HOME[code], code, code, SELF_NAME[code], ' aria-current="page"' if code == lang else "", LABEL[code])
         for code in codes)
-    return f'<nav class="langs" aria-label="Language">{links}</nav>'
+    return f'<nav class="langs" aria-label="{NAV_NAME[lang]}">{links}</nav>'
 
 
 def head_links(lang: str) -> str:
@@ -63,6 +70,73 @@ def head_links(lang: str) -> str:
         rows += [f'<link rel="alternate" hreflang="{code}" href="{HOME[code]}">' for code in codes]
         rows.append(f'<link rel="alternate" hreflang="x-default" href="{HOME["en"]}">')
     return "\n".join(rows)
+
+
+def locale_meta(lang: str) -> str:
+    rows = [f'<meta property="og:locale" content="{OG_LOCALE[lang]}">']
+    rows += [f'<meta property="og:locale:alternate" content="{OG_LOCALE[code]}">'
+             for code in available() if code != lang]
+    return "\n".join(rows)
+
+
+def organization() -> dict:
+    return {
+        "@type": "Organization", "@id": ORG_ID, "name": "Axon Trade ApS", "legalName": "Axon Trade ApS",
+        "url": SITE + "/", "logo": SITE + "/og.png",
+        "description": "Axon Trade ApS is a Danish private limited company in Copenhagen. It operates Neural Logic, which builds AI colleagues for companies with large archives, and Hockey24, an online shop for hockey equipment.",
+        "foundingDate": "2025-09-18", "founder": {"@type": "Person", "name": "Thomas Möller"},
+        "address": {"@type": "PostalAddress", "streetAddress": "Njalsgade 21F, 2.", "postalCode": "2300",
+                    "addressLocality": "København S", "addressCountry": "DK"},
+        "identifier": {"@type": "PropertyValue", "propertyID": "CVR", "value": "45920763"},
+        "vatID": "DK45920763", "email": "info@axontrade.dk", "areaServed": ["DK", "DE", "EU"],
+        "knowsLanguage": ["da", "de", "en"],
+        "brand": [{"@type": "Brand", "name": "Neural Logic", "url": "https://neurallogic.dk/"},
+                  {"@type": "Brand", "name": "Hockey24", "url": "https://hockey24.dk/"}],
+    }
+
+
+def jsonld(lang: str, strings: dict) -> str:
+    """Structured data, built as data and serialised, so it is valid JSON by construction: the
+    company, and this language's page about it (title and description are the page's own)."""
+    page = {
+        "@type": "WebPage", "@id": HOME[lang] + "#webpage", "url": HOME[lang],
+        "name": strings["t001_title"], "description": strings["meta_description"], "inLanguage": lang,
+        "about": {"@id": ORG_ID}, "publisher": {"@id": ORG_ID},
+        "primaryImageOfPage": {"@type": "ImageObject", "url": SITE + "/og.png", "width": 1200, "height": 630},
+    }
+    doc = {"@context": "https://schema.org", "@graph": [organization(), page]}
+    body = json.dumps(doc, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    json.loads(body)   # the round trip is the validity check
+    return f'<script type="application/ld+json">\n{body}\n</script>'
+
+
+def sitemap() -> str:
+    """One entry per page that exists, each listing every language version (and x-default),
+    so the alternates are reciprocal by construction."""
+    codes = available()
+    rows = ['<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    for code in codes:
+        rows.append(f'  <url>\n    <loc>{HOME[code]}</loc>')
+        if len(codes) > 1:
+            rows += [f'    <xhtml:link rel="alternate" hreflang="{c}" href="{HOME[c]}"/>' for c in codes]
+            rows.append(f'    <xhtml:link rel="alternate" hreflang="x-default" href="{HOME["en"]}"/>')
+        rows.append("  </url>")
+    rows.append("</urlset>")
+    return "\n".join(rows) + "\n"
+
+
+def check_robots() -> None:
+    """robots.txt must point at the sitemap this build writes and must not shut out a page it lists."""
+    text = (ROOT / "robots.txt").read_text(encoding="utf-8")
+    if f"Sitemap: {SITE}/sitemap.xml" not in text.splitlines():
+        sys.exit("ERROR: robots.txt does not name https://axontrade.dk/sitemap.xml")
+    for line in text.splitlines():
+        rule = line.split("#")[0].strip()
+        if rule.lower().startswith("disallow:") and rule.split(":", 1)[1].strip() not in ("",):
+            path = rule.split(":", 1)[1].strip()
+            if any(HOME[code].removeprefix(SITE).startswith(path) for code in available()):
+                sys.exit(f"ERROR: robots.txt disallows {path}, which the sitemap lists")
 
 
 def render(lang: str) -> str:
@@ -78,6 +152,8 @@ def render(lang: str) -> str:
     out = out.replace("{{langswitch}}", langswitch(lang))
     out = out.replace("{{canonical}}", head_links(lang))
     out = out.replace("{{ogurl}}", HOME[lang])
+    out = out.replace("{{locale_meta}}", locale_meta(lang))
+    out = out.replace("{{jsonld}}", jsonld(lang, strings))
     out = out.replace("{{nl_home}}", NL_HOME[lang])
     out = out.replace('<html lang="en">', f'<html lang="{lang}">')
     if "{{" in out:
@@ -122,6 +198,10 @@ def main() -> None:
         html = check_links(render(lang), lang, fatal=preview is None)
         target.write_text(html, encoding="utf-8")
         print("wrote", target)
+    if preview is None:
+        check_robots()
+        (ROOT / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
+        print("wrote", ROOT / "sitemap.xml")
 
 
 # Where a link may land while its real target is not live yet (checked at every build).
