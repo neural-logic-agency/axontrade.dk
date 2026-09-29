@@ -38,6 +38,7 @@
   --accent:#9FD1E8; --accent-ink:#0B1F35; --acc-dim:rgba(159,209,232,.14);
   --brass:#CDAE72; --brass-dim:rgba(205,174,114,.16); --brass-line:rgba(205,174,114,.42);
   --line:rgba(238,234,224,.11); --line2:rgba(238,234,224,.2);
+  --field-edge:rgba(238,234,224,.40);
   --ui:"Instrument Sans",system-ui,sans-serif; --serif:"Source Serif 4",Georgia,serif;
   --ease:cubic-bezier(.23,1,.32,1);
   --gutter:clamp(20px,4vw,48px);
@@ -155,7 +156,7 @@ a.node:hover .u::after{transform:translateX(3px) rotate(45deg)}
 
 .write{margin-top:36px}
 .write label{display:block;font:500 12px/1.3 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-bottom:10px}
-.write .field{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;background:rgba(0,0,0,.22);border-radius:10px;padding:6px 6px 6px 16px;box-shadow:inset 0 0 0 1px var(--line2)}
+.write .field{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;background:rgba(0,0,0,.22);border-radius:10px;padding:6px 6px 6px 16px;box-shadow:inset 0 0 0 1px var(--field-edge)}
 .write .field:focus-within{box-shadow:inset 0 0 0 1px var(--brass),0 0 0 3px var(--brass-dim)}
 .write input{flex:1;min-width:180px;background:none;border:0;color:var(--ink);font:400 16px/1.4 var(--ui);padding:10px 0;outline:none;text-overflow:ellipsis}
 .write input::placeholder{color:var(--faint)}
